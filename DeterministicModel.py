@@ -76,7 +76,7 @@ def logistic_growth_differential_model(pandemic_rate, selection_coeff, pandemic_
         N_l[i] = N_t[i] - N_c[i]
 
         if (i % (1 / pandemic_rate) < 1):
-            N_c[i] -= N_c[i] * pandemic_death_coeff
+            N_c[i] *= (1 - pandemic_death_coeff)
 
     return N_c, N_l
 
