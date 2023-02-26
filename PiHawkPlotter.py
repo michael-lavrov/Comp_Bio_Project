@@ -22,7 +22,7 @@ class Plotter:
                           "title": f"{model_name}"}).show()
 
     @staticmethod
-    def plot_average_fraction_of_wins(pandemic_chances, wins_fractions_arr):
+    def plot_average_fraction_of_wins(pandemic_chances, wins_fractions_arr, title):
         """
         Plots the average fraction of gathering birds win as a function of the chance for a pandemic each year.
         :param pandemic_chances: Range of pandemic chances.
@@ -30,8 +30,8 @@ class Plotter:
         :return: None.
         """
         go.Figure(data=[go.Scatter(x=pandemic_chances, y=wins_fractions_arr)],
-                  layout={"xaxis": {"title": "pandemic chance"}, "yaxis": {"title": "Fraction of gathering wins"},
-                  "title": "Average fraction of wins of the gathering birds as a function of pandemic chance"}).show()
+                  layout={"xaxis": {"title": "pandemic rate"}, "yaxis": {"title": "Fraction of colony birds"},
+                  "title": title}).show()
 
     @staticmethod
     def plot_heatmap_selection_coeff_pandemic_chance(mat: np.ndarray, chances: np.ndarray, selection_coeffs: np.ndarray,
