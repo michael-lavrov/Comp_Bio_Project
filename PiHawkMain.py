@@ -3,7 +3,7 @@ from PiHawkPlotter import Plotter
 from DeterministicModel import logistic_growth_model_wrapper, logistic_growth_model
 import numpy as np
 
-
+# bdika
 DEATH_RATE = 0.5
 NUM_OF_TRIALS = 100
 
