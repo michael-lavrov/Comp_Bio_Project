@@ -3,6 +3,7 @@ from PiHawkPlotter import Plotter
 from DeterministicModel import logistic_growth_model_wrapper, logistic_growth_model, logistic_growth_differential_model
 import numpy as np
 
+PANDEMIC_RATE_IND, SELECTION_COEFF_IND, GROWTH_RATE_IND, DEATH_COEFF_IND = 0, 1, 2, 3
 
 DEATH_RATE = 0.5
 NUM_OF_TRIALS = 100
@@ -52,13 +53,18 @@ def evaluate_parameter_deterministic_model(parameter_ind, values, num_of_generat
     fractions = []
     for value in values:
 
-        if parameter_ind == 0:
+        if parameter_ind == PANDEMIC_RATE_IND:
             colony_birds, lone_birds = logistic_growth_differential_model(value, selection_coefficient,
                                                                           DEATH_RATE, num_of_generations)
-        if parameter_ind == 1:
+        if parameter_ind == SELECTION_COEFF_IND:
             colony_birds, lone_birds = logistic_growth_differential_model(pandemic_rate, value,
                                                                           DEATH_RATE, num_of_generations)
+        if parameter_ind == GROWTH_RATE_IND:
+            colony_birds, lone_birds = logistic_growth_differential_model(0.069, 0.0489,
+                                                                          DEATH_RATE, num_of_generations, value)
         else:
+            colony_birds, lone_birds = logistic_growth_differential_model(0.069, 0.0489,
+                                                                          value, num_of_generations)
 
 
         total = colony_birds[len(colony_birds) - 1] + lone_birds[len(lone_birds) - 1]
@@ -87,17 +93,18 @@ if __name__ == "__main__":
     # Plotter.plot_birds_numbers_scatter_plot(colony_birds, lone_birds, "Deterministic")
 
 
-    rates = np.arange(0.069, 0.072, 0.0001)
-    selection_coefficients = np.arange(0.0485, 0.052, 0.0001)
+    # rates = np.arange(0.069, 0.072, 0.0001)
+    # selection_coefficients = np.arange(0.0485, 0.052, 0.0001)
+    growth_rates = np.arange(0, 10, 0.1)
+    # death_rates = np.arange(0, 1, 0.01)
 
+    fracs = evaluate_parameter_deterministic_model(2, growth_rates, 1000)
+    Plotter.plot_average_fraction_of_wins(growth_rates, fracs,
+                                          "Fraction of colony birds as a function of population growth rate")
 
-    # fracs = evaluate_parameter_deterministic_model(1, selection_coefficients, 1000)
-    # Plotter.plot_average_fraction_of_wins(selection_coefficients, fracs,
-    #                                       "Fraction of colony birds as a function of selection coefficient")
-
-
-    colony_birds, lone_birds = logistic_growth_differential_model(0.069, 0.0489, 0.5, 1000)
-    Plotter.plot_birds_numbers_scatter_plot(colony_birds, lone_birds, "Differential")
+    #
+    # colony_birds, lone_birds = logistic_growth_differential_model(0.1, 0.05, 0.4, 100, 1.5)
+    # Plotter.plot_birds_numbers_scatter_plot(colony_birds, lone_birds, "Differential")
 
 
     # data = compare_stats(rates, selection_coefficients)

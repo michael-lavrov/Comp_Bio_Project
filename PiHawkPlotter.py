@@ -30,7 +30,7 @@ class Plotter:
         :return: None.
         """
         go.Figure(data=[go.Scatter(x=pandemic_chances, y=wins_fractions_arr)],
-                  layout={"xaxis": {"title": "pandemic rate"}, "yaxis": {"title": "Fraction of colony birds"},
+                  layout={"xaxis": {"title": "parameter"}, "yaxis": {"title": "Fraction of colony birds"},
                   "title": title}).show()
 
     @staticmethod
