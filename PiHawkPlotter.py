@@ -38,6 +38,6 @@ class Plotter:
                                                      title_text: str):
 
         go.Figure(data=[go.Heatmap(x=chances, y=selection_coeffs, z=mat)],
-                  layout={"xaxis": {"title": "pandemic chance"}, "yaxis": {"title": "selection coefficient"},
+                  layout={"xaxis": {"title": "pandemic rate"}, "yaxis": {"title": "selection coefficient"},
                           "title": title_text}).show()
 
