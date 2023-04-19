@@ -1,5 +1,5 @@
 import numpy as np
-from discrete_model.DiscreteDeterministicModel import run_single_iteration
+from discrete_model.DetermenisticModel import run_single_iteration
 INITIAL_NUM_OF_BIRDS = 3000
 CARRYING_CAPACITY = 10000
 

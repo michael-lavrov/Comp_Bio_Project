@@ -1,7 +1,7 @@
 import numpy as np
 import random
 import pickle
-from DataManager import DataManager
+from utils.DataManager import DataManager
 
 INITIAL_NUM_OF_BIRDS = 3000
 CARRYING_CAPACITY = 10000

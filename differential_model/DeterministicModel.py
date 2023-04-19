@@ -7,7 +7,7 @@ C_WIN = 1
 DT = 0.1
 
 
-def logistic_growth_differential_model(pandemic_rate, selection_coeff, pandemic_death_coeff, num_of_generations=100,
+def logistic_growth_differential_model(pandemic_rate, selection_coefficient, death_coeff, num_of_generations=100,
                                        growth_rate=1.5):
 
     """
@@ -25,14 +25,13 @@ def logistic_growth_differential_model(pandemic_rate, selection_coeff, pandemic_
         dN_t = (growth_rate * N_t[i-1] * (CARRYING_CAPACITY - N_t[i-1]) / CARRYING_CAPACITY) * DT
 
         N_t[i] = N_t[i-1] + dN_t
-        N_c[i] = ((1+selection_coeff) * N_c[i-1] / ((1+selection_coeff) * N_c[i-1] + N_l[i-1])) * N_t[i]
+        N_c[i] = ((1 + selection_coefficient) * N_c[i - 1] / ((1 + selection_coefficient) * N_c[i - 1] + N_l[i - 1])) * N_t[i]
         N_l[i] = N_t[i] - N_c[i]
 
         if (i % (1 / pandemic_rate) < 1):
             num_of_pandemics += 1
-            N_c[i] *= (1 - pandemic_death_coeff)
+            N_c[i] *= (1 - death_coeff)
 
-    print(f"Number of pandemics in Deterministic model: {num_of_pandemics}")
     return N_c, N_l
 
 

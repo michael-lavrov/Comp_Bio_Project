@@ -1,7 +1,7 @@
-from DiscreteDeterministicModel import run_single_iteration
+from discrete_model.DetermenisticModel import run_single_iteration
 import numpy as np
 import random
-from DataManager import DataManager
+from utils.DataManager import DataManager
 import pickle
 
 INITIAL_NUM_OF_BIRDS = 3000
@@ -11,21 +11,17 @@ C_WIN = 1
 L_WIN = 0
 
 
-def logistic_growth_stochastic_model(pandemic_prob, selection_coefficient, pandemic_death_coeff,
-                                     num_of_generations=None):
+def stochastic_at_pandemic_rate_model(pandemic_prob, selection_coefficient, c_pandemic_death_factor,
+                                      l_pandemic_death_factor=0, num_of_generations=1000):
+
     """
-    Stochastic model of logistic growth. Instead of setting a fixed pandemic rate, every year a pandemic hits by a
-    given chance. The simulation continues until one of the groups goes extinct.
-    :param pandemic_prob: Chance by which a pandemic can hit every year.
-    :param selection_coefficient: The selection coefficient that favors the gathering bird growth.
-    :param pandemic_death_coeff: The average percentage of birds that die during a pandemic year.
-    :param num_of_generations: Number of rounds to run the simulation.
-    :return: The arrays which have the number of birds each year.
+    Stochastic logistic growth model. The stochasticity is in the pandemic rate variable. The pandemic rate is
+    the probability of having a pandemic each year.
     """
     colony_birds = []
     lone_birds = []
 
-    data_manager = DataManager(pandemic_prob, selection_coefficient, pandemic_death_coeff)
+    data_manager = DataManager(pandemic_prob, selection_coefficient, c_pandemic_death_factor)
     colony_birds.append(INITIAL_NUM_OF_BIRDS)
     lone_birds.append(INITIAL_NUM_OF_BIRDS)
     carrying_capacity = CARRYING_CAPACITY
@@ -37,7 +33,8 @@ def logistic_growth_stochastic_model(pandemic_prob, selection_coefficient, pande
 
         data_manager.generate_seed()
         if random.choices([True, False], weights=[pandemic_prob, 1 - pandemic_prob])[0]:
-            colony_birds[i] *= np.random.normal((1-pandemic_death_coeff), 0.1)
+            colony_birds[i] *= (1 - c_pandemic_death_factor)
+            lone_birds[i] *= (1 - l_pandemic_death_factor)
 
     # DataManager.save_data_manager_obj(data_manager)
     return colony_birds, lone_birds
@@ -51,8 +48,8 @@ def stochastic_logistic_growth_model_win_wrapper(pandemic_prob, selection_coeffi
     :param pandemic_death_coeff: The average percentage of birds that die during a pandemic year.
     :return: 1 if the lone birds go extinct, 0 otherwise.
     """
-    c_birds, l_birds = logistic_growth_stochastic_model(pandemic_prob, selection_coefficient, pandemic_death_coeff,
-                                                        None)
+    c_birds, l_birds = stochastic_at_pandemic_rate_model(pandemic_prob, selection_coefficient, pandemic_death_coeff,
+                                                         None)
     if c_birds[len(c_birds) - 1] < 1:
         return L_WIN
     else:
@@ -77,6 +74,7 @@ def calculate_average_wins(number_of_trials, pandemic_probabilities, selection_c
         wins_fraction_arr.append(count / number_of_trials)
 
     return wins_fraction_arr
+
 
 def run_stochastic_model_from_seed(seed_saver_path):
     """
