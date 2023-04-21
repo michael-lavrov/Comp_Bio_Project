@@ -12,8 +12,8 @@ L_WIN = 0
 
 
 def stochastic_at_pandemic_rate_model(pandemic_prob, selection_coefficient, c_pandemic_death_factor,
-                                      l_pandemic_death_factor=0, num_of_generations=1000):
-
+                                      l_pandemic_death_factor=0, num_of_generations=1000, growth_rate=1.5,
+                                      init_num_of_birds=INITIAL_NUM_OF_BIRDS, carrying_capacity=CARRYING_CAPACITY):
     """
     Stochastic logistic growth model. The stochasticity is in the pandemic rate variable. The pandemic rate is
     the probability of having a pandemic each year.
@@ -21,17 +21,14 @@ def stochastic_at_pandemic_rate_model(pandemic_prob, selection_coefficient, c_pa
     colony_birds = []
     lone_birds = []
 
-    data_manager = DataManager(pandemic_prob, selection_coefficient, c_pandemic_death_factor)
-    colony_birds.append(INITIAL_NUM_OF_BIRDS)
-    lone_birds.append(INITIAL_NUM_OF_BIRDS)
-    carrying_capacity = CARRYING_CAPACITY
-    growth_rate = DEFAULT_GROWTH_RATE
+    # data_manager = DataManager(pandemic_prob, selection_coefficient, c_pandemic_death_factor)
+    colony_birds.append(init_num_of_birds)
+    lone_birds.append(init_num_of_birds)
 
     for i in range(num_of_generations):
 
         run_single_iteration(carrying_capacity, colony_birds, growth_rate, i, lone_birds, selection_coefficient)
-
-        data_manager.generate_seed()
+        # data_manager.generate_seed()
         if random.choices([True, False], weights=[pandemic_prob, 1 - pandemic_prob])[0]:
             colony_birds[i] *= (1 - c_pandemic_death_factor)
             lone_birds[i] *= (1 - l_pandemic_death_factor)

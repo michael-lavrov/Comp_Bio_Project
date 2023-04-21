@@ -38,10 +38,10 @@ class Plotter:
     @staticmethod
     def plot_heatmap(mat: np.ndarray, stats1: np.ndarray, stats2: np.ndarray,
                      title_text: str = None, xaxis_title: str = None,
-                     yaxis_title: str = None):
+                     yaxis_title: str = None, legend_title=None):
 
         go.Figure(data=[go.Heatmap(x=stats1, y=stats2, z=mat,
-                                   colorbar=dict(title="Fraction of colony birds"), colorscale="darkmint")],
+                                   colorbar=dict(title=legend_title), colorscale="darkmint")],
 
           layout={"xaxis": {"title": xaxis_title}, "yaxis": {"title": yaxis_title},
                   "title": title_text}).show()
