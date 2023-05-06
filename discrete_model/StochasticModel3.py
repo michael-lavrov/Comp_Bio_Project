@@ -8,9 +8,9 @@ UPPER_BOUND = 0.1
 STD = 0.1
 
 
-def stochastic_at_death_factor_model(pandemic_rate, selection_coeff, c_pandemic_death_factor, l_pandemic_death_factor=0,
-                                     num_of_generations=1000, growth_rate=1.5, init_num_of_birds=INITIAL_NUM_OF_BIRDS,
-                                     carrying_capacity=CARRYING_CAPACITY):
+def stochastic_at_both_model(pandemic_rate, selection_coeff, c_pandemic_death_factor, l_pandemic_death_factor=0,
+                             num_of_generations=1000, growth_rate=1.5, init_num_of_birds=INITIAL_NUM_OF_BIRDS,
+                             carrying_capacity=CARRYING_CAPACITY):
     """
     Simple model that calculates for each generation the number of birds of the two types.
     The growth is according to a predetermined growth rate, and a selection coefficient that favors the colony birds.

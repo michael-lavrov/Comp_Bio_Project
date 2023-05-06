@@ -11,7 +11,7 @@ def mk_dir_for_stoch_avg(dir_path, params, model_name):
     os.makedirs(new_dir, exist_ok=True)
     header_file_path = os.path.join(new_dir, "avg_runs_header.txt")
     pandemic_rate, selection_coefficient, c_death_factor, l_death_factor, number_of_generations,\
-    growth_rate, initial_num_of_birds, carrying_capacity = params
+        growth_rate, initial_num_of_birds, carrying_capacity = params
 
     with open(header_file_path, 'w') as file:
         file.write(f"Average runs for {model_name} at: {date_time}\n\n")
@@ -36,11 +36,22 @@ def mk_heatmap_header(dir_path, model_name, heatmap_type):
         file.write("y_axis: Pandemic rate\n")
         file.write(f"Color: Fraction of {heatmap_type}")
 
+
 def mk_dir_for_heatmap(dir_path, model_name=""):
 
     now = datetime.now()
     date_time = now.strftime("%Y-%m-%d_%H-%M-%S-%f")
     new_dir = os.path.join(dir_path, f'{model_name}_{date_time}')
+    os.makedirs(new_dir, exist_ok=True)
+
+    return new_dir
+
+
+def make_new_dir(dir_path, dir_name):
+
+    now = datetime.now()
+    date_time = now.strftime("%Y-%m-%d_%H-%M-%S-%f")
+    new_dir = os.path.join(dir_path, f'{dir_name}_{date_time}')
     os.makedirs(new_dir, exist_ok=True)
 
     return new_dir
@@ -87,6 +98,19 @@ def save_single_run(dir_path, parameters, birds_populations, model_type=None):
     data = np.column_stack((total_birds, colony_birds, lone_birds, colony_birds_frac))
     df = pd.DataFrame(data=data, index=generations, columns=columns)
     df.to_csv(data_file_path)
+
+
+def data_extractor(path):
+
+    df = pd.read_csv(path)
+    data = df.iloc[:, 1:].to_numpy()
+    death_factors = df.columns.to_numpy()[1:]
+    pandemic_rates = df.iloc[:, 0].to_numpy()
+    return data, death_factors, pandemic_rates
+
+
+
+
 
 
 

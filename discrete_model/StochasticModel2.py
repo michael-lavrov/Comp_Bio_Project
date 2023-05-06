@@ -18,14 +18,13 @@ def stochastic_at_pandemic_rate_model(pandemic_prob, selection_coefficient, c_pa
     Stochastic logistic growth model. The stochasticity is in the pandemic rate variable. The pandemic rate is
     the probability of having a pandemic each year.
     """
-    colony_birds = []
-    lone_birds = []
+    colony_birds = np.empty(num_of_generations)
+    lone_birds = np.empty(num_of_generations)
 
-    # data_manager = DataManager(pandemic_prob, selection_coefficient, c_pandemic_death_factor)
-    colony_birds.append(init_num_of_birds)
-    lone_birds.append(init_num_of_birds)
+    colony_birds[0] = init_num_of_birds
+    lone_birds[0] = init_num_of_birds
 
-    for i in range(num_of_generations):
+    for i in range(1, num_of_generations):
 
         run_single_iteration(carrying_capacity, colony_birds, growth_rate, i, lone_birds, selection_coefficient)
         # data_manager.generate_seed()

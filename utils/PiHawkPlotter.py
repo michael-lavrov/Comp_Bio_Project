@@ -2,6 +2,10 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+DEFAULT_FONT = 'Calibri'
+DEFAULT_FONT_SIZE = 20
+STYLE_CONFIG = {'family': DEFAULT_FONT, 'size': DEFAULT_FONT_SIZE}
+
 
 class Plotter:
     """
@@ -40,25 +44,29 @@ class Plotter:
                      title_text: str = None, xaxis_title: str = None,
                      yaxis_title: str = None, legend_title=None):
 
-        go.Figure(data=[go.Heatmap(x=stats1, y=stats2, z=mat,
+        fig = go.Figure(data=[go.Heatmap(x=stats1, y=stats2, z=mat,
                                    colorbar=dict(title=legend_title), colorscale="darkmint")],
-
           layout={"xaxis": {"title": xaxis_title}, "yaxis": {"title": yaxis_title},
-                  "title": title_text}).show()
+                  "title": title_text})
+        fig.update_layout(font=STYLE_CONFIG)
+        fig.show()
 
     @staticmethod
     def plot_scatter_subplots(num_rows, num_cols, data, subplot_titles):
         """
         data: [ [colony_birds, lone_birds], [colony_birds, lone_birds],  ... ]
         """
+        font = "Calibri"
+        font_size = 20
         fig = make_subplots(rows=num_rows, cols=num_cols, shared_xaxes=True, x_title="Generations",
                             y_title="Birds number", subplot_titles=subplot_titles)
+        fig.update_annotations(font=dict(family=font, size=font_size))
         color1, color2 = "red", "blue"
         for i in range(num_rows):
             for j in range(num_cols):
                 colony_birds, lone_birds = data[i+j][0], data[i+j][1]
                 generations = np.arange(len(colony_birds))
-                if i == 0 and j == 0:
+                if i == j == 0:
                     fig.add_trace(go.Scatter(x=generations, y=colony_birds, marker=dict(color=color1),
                                              name='Colony Birds'), row=i+1, col=j+1)
                     fig.add_trace(go.Scatter(x=generations, y=lone_birds, marker=dict(color=color2),
@@ -70,6 +78,32 @@ class Plotter:
 
                     fig.add_trace(go.Scatter(x=generations, y=lone_birds, marker=dict(color=color2),
                                              showlegend=False), row=i + 1, col=j + 1)
+        fig.update_layout(font=dict(family=font, size=font_size-2))
         fig.show()
 
+    @staticmethod
+    def plot_heatmap_subplots(num_rows, num_cols, data, params, subplot_titles, param_names=None):
+        """
+        params: [ [params0], [params1] ]
+        data: [ matrix1, matrix2, ... ]
+        param_names: (param0, param1)
+        """
+        font = "Calibri"
+        font_size = 20
+        fig = make_subplots(rows=num_rows, cols=num_cols, subplot_titles=subplot_titles, x_title=param_names[0],
+                            y_title=param_names[1])
+        fig.update_annotations(font=dict(family=font, size=font_size))
+
+        for i in range(num_rows):
+            for j in range(num_cols):
+                if i == j == 0:
+                    fig.add_trace(go.Heatmap(x=params[0], y=params[1], z=data[i+j], colorscale="darkmint"),
+                                  row=i+1, col=j+1)
+                else:
+                    fig.add_trace(go.Heatmap(x=params[0], y=params[1], z=data[i + j], colorscale="darkmint",
+                                             showscale=False), row=i + 1, col=j + 1)
+
+        fig.update_layout(height=500)
+
+        fig.show()
 
