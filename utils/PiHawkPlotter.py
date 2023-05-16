@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 DEFAULT_FONT = 'Calibri'
-DEFAULT_FONT_SIZE = 20
+DEFAULT_FONT_SIZE = 24
 STYLE_CONFIG = {'family': DEFAULT_FONT, 'size': DEFAULT_FONT_SIZE}
 
 
@@ -21,10 +21,10 @@ class Plotter:
         :return: None.
         """
         generations = np.arange(len(colony_birds))
-        return go.Figure(data=[go.Scatter(x=generations, y=colony_birds, name="Colony birds"),
-                        go.Scatter(x=generations, y=lone_birds, name="Lone birds")],
-                        layout={"xaxis": {"title": "Years"}, "yaxis": {"title": "Number of birds"},
-                          "title": f"{model_name}"})
+        return go.Figure(data=[go.Scatter(x=generations, y=lone_birds, name="Lone birds"),
+                        go.Scatter(x=generations, y=colony_birds, name="Colony birds")],
+                        layout={"xaxis": {"title": "Generations"}, "yaxis": {"title": "Number of birds"},
+                          "title": f"{model_name}", "font":STYLE_CONFIG})
 
 
     @staticmethod
@@ -58,8 +58,8 @@ class Plotter:
         """
         font = "Calibri"
         font_size = 20
-        fig = make_subplots(rows=num_rows, cols=num_cols, shared_xaxes=True, x_title="Generations",
-                            y_title="Birds number", subplot_titles=subplot_titles)
+        fig = make_subplots(rows=num_rows, cols=num_cols, shared_xaxes=False, x_title=None,
+                            y_title=None, subplot_titles=subplot_titles)
         fig.update_annotations(font=dict(family=font, size=font_size))
         color1, color2 = "red", "blue"
         for i in range(num_rows):
@@ -79,6 +79,12 @@ class Plotter:
                     fig.add_trace(go.Scatter(x=generations, y=lone_birds, marker=dict(color=color2),
                                              showlegend=False), row=i + 1, col=j + 1)
         fig.update_layout(font=dict(family=font, size=font_size-2))
+        fig['layout']['xaxis']['title'] = "Generations"
+        fig['layout']['yaxis']['title'] = "Birds number"
+        fig['layout']['xaxis2']['title'] = "Generations"
+        fig['layout']['yaxis2']['title'] = "Birds number"
+        fig['layout']['xaxis3']['title'] = "Generations"
+        fig['layout']['yaxis3']['title'] = "Birds number"
         fig.show()
 
     @staticmethod
@@ -106,4 +112,14 @@ class Plotter:
         fig.update_layout(height=500)
 
         fig.show()
+
+    @staticmethod
+    def plot_bar_plot(x_values, y_values, x_title, y_title, plot_title):
+        """
+        Creates a bar plot with the given values.
+        """
+        fig = go.Figure(data=[go.Bar(x=x_values, y=y_values)],
+                        layout={"xaxis": {"title": x_title}, "yaxis": {"title": y_title}, "title": plot_title})
+        fig.show()
+
 

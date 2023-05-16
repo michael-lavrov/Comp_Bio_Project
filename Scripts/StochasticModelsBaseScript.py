@@ -101,23 +101,38 @@ def run_stoch_heatmaps(num_of_runs, model_func, model_name, pandemic_rates, deat
     save_heatmap_data(new_path, death_factors, pandemic_rates, colony_win_mat, "coexistence")
 
 
+def run_stoch_single_heatmap(num_of_runs, model, model_name, pandemic_rates, death_factors, dir_path):
+    new_path = mk_dir_for_heatmap(dir_path, model_name)
+
+    colony_win_mat = np.empty(shape=(pandemic_rates.size, death_factors.size))
+    for i, rate in enumerate(pandemic_rates):
+        for j, factor in enumerate(death_factors):
+            params = [rate, SELECTION_COEFFICIENT, factor, LONE_DEATH_FACTOR, NUM_OF_GENERATIONS, GROWTH_RATE,
+                      INITIAL_NUM_OF_BIRDS, CARRYING_CAPACITY]
+            colony_win_frac, lone_win_frac, coexist_frac = \
+                run_stochastic_model_average(num_of_runs, model, model_name, params, new_path)
+            colony_win_mat[i][j] = colony_win_frac
+    Plotter.plot_heatmap(colony_win_mat, death_factors, pandemic_rates, xaxis_title="Death factor",
+                         yaxis_title="Pandemic rate", legend_title="Fraction of colony birds wins")
+
+
+def run_example_bird_population(dir_path, model, model_name):
+
+    params = [RATE1, 0.05, 0.5, 0, NUM_OF_GENERATIONS, GROWTH_RATE, INITIAL_NUM_OF_BIRDS, CARRYING_CAPACITY]
+    colony_birds, lone_birds = model(*params)
+    fig = Plotter.plot_birds_numbers_scatter_plot(colony_birds, lone_birds, model_name)
+    fig.show()
+
+
 def main():
 
-    # pandemic_rates = np.array([0.00001] + [1 / i for i in range(15, 1, -1)])
-    # death_factors = np.linspace(0, 1, 11)
-    # pandemic_rates = np.linspace(0, 1, 31)
+    pandemic_rates = np.array([0.00001] + [1 / i for i in range(15, 1, -1)])
+    death_factors = np.linspace(0, 1, 15)
+    # pandemic_rates = np.linspace(0, 1, 11)
     # death_factors = np.linspace(0, 1, 31)
-    # run_stoch_heatmaps(NUM_OF_RUNS, stochastic_at_both_model, "Stochastic3", pandemic_rates, death_factors,
-    #                    sys.argv[1])
-    run_single_stoch_dynamics(sys.argv[1], stochastic_at_death_factor_model, "Stochastic1")
+    path = sys.argv[1]
+    run_stoch_single_heatmap(NUM_OF_RUNS, stochastic_at_both_model, "Stochastic_at_both", pandemic_rates, death_factors, path)
 
 
 if __name__ == "__main__":
     main()
-    # colony_wins, death_factors, pandemic_rates = data_extractor(r"C:\Users\Michael\Desktop\Studies\Comp_Bio_Proj\Data\Stochastic_1_2023-05-02_21-05-11-766522\colony_wins_heatmap_data.csv")
-    # lone_wins, _, _ = data_extractor(r"C:\Users\Michael\Desktop\Studies\Comp_Bio_Proj\Data\Stochastic_1_2023-05-02_21-05-11-766522\lone_wins_heatmap_data.csv")
-    # coexsitence_wins, _, _ = data_extractor(r"C:\Users\Michael\Desktop\Studies\Comp_Bio_Proj\Data\Stochastic_1_2023-05-02_21-05-11-766522\coexistence_heatmap_data.csv")
-    # subplot_titles = ("Fraction of Colony birds", "Fraction of Lone birds", "Fraction of Coexistence")
-    # param_names = ["Death factor", "Pandemic rate"]
-    # Plotter.plot_heatmap_subplots(1, 3, [colony_wins, lone_wins, coexsitence_wins], [death_factors, pandemic_rates],
-    #                               subplot_titles, param_names)
