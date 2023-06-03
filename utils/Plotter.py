@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 DEFAULT_FONT = 'Calibri'
-DEFAULT_FONT_SIZE = 24
+DEFAULT_FONT_SIZE = 18
 STYLE_CONFIG = {'family': DEFAULT_FONT, 'size': DEFAULT_FONT_SIZE}
 
 
