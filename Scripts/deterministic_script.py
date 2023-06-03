@@ -4,7 +4,7 @@
 from utils.DataSaver import mk_dir_for_heatmap, save_single_run, save_heatmap_data, mk_heatmap_header
 from discrete_model.logistic_growth_model import logistic_growth_model
 from discrete_model.pandemic_functions import deterministic_pandemic_function
-from plot_making_functions import run_three_scenarios, run_heatmap_pr_df
+from functions_for_script import run_three_scenarios, run_heatmap_pr_df
 from utils.Plotter import Plotter
 from utils.Auxiliary import Params, Model, MODEL_NAMES, ParamName, PARAM_NAMES
 from typing import Tuple, Callable
@@ -25,7 +25,7 @@ FACTOR1, FACTOR2, FACTOR3 = 0.4, 0.8, 0.52
 COLONY_BIRDS_STR = "Colony birds"
 
 
-def pandemic_rates_comparison_script(dir_path):
+def death_factors_comparison_script(dir_path):
 
     c_win_params = Params(pandemic_rate=DEFAULT_PANDEMIC_RATE, selection_coefficient=DEFAULT_SELECTION_COEFFICIENT,
                           c_death_factor=FACTOR1, l_death_factor=DEFAULT_L_DEATH_FACTOR,
