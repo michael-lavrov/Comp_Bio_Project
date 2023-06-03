@@ -1,8 +1,8 @@
 import sys
-from discrete_model.TypesShiftModel import types_shift_model
-from discrete_model.DetermenisticModel import logistic_growth_model
+from discrete_model.types_shift_model import types_shift_model
+from discrete_model.logistic_growth_model import logistic_growth_model
 from utils.DataSaver import save_single_run, make_new_dir
-from utils.PiHawkPlotter import Plotter
+from utils.Plotter import Plotter
 # Constant values of unchanging parameters
 INITIAL_NUM_OF_BIRDS = 3000
 CARRYING_CAPACITY = 10000
@@ -26,15 +26,15 @@ def run_single_types_shift_dynamics(dir_path):
     new_path = make_new_dir(dir_path, "types_shift_single_dynamics")
     data_for_plot = []
     # Colony birds winning scenario:
-    colony_birds_1, lone_birds_1 = types_shift_model(*C_WIN_PARAMS)
+    colony_birds_1, lone_birds_1 = types_shift_model(None)
     save_single_run(new_path, C_WIN_PARAMS, [colony_birds_1, lone_birds_1], TYPE_SHIFT)
     data_for_plot.append(([colony_birds_1, lone_birds_1]))
     # Lone birds winning scenario
-    colony_birds_2, lone_birds_2 = types_shift_model(*L_WIN_PARAMS)
+    colony_birds_2, lone_birds_2 = types_shift_model(None)
     save_single_run(new_path, L_WIN_PARAMS, [colony_birds_2, lone_birds_2], TYPE_SHIFT)
     data_for_plot.append(([colony_birds_2, lone_birds_2]))
     # Coexistence scenario
-    colony_birds_3, lone_birds_3 = types_shift_model(*CO_EX_PARAMS)
+    colony_birds_3, lone_birds_3 = types_shift_model(None)
     save_single_run(new_path, CO_EX_PARAMS, [colony_birds_3, lone_birds_3], TYPE_SHIFT)
     data_for_plot.append(([colony_birds_3, lone_birds_3]))
 
@@ -51,11 +51,11 @@ def run_single_example(dir_path):
     params_ts = [1/14, 0.05, 0.5, SHIFT_FACTOR, 0, NUM_OF_GENERATIONS, GROWTH_RATE, INITIAL_NUM_OF_BIRDS,
                  CARRYING_CAPACITY]
 
-    colony_birds, lone_birds = logistic_growth_model(*params)
+    colony_birds, lone_birds = logistic_growth_model()
     data_for_plot.append([colony_birds, lone_birds])
     save_single_run(new_path, params, [colony_birds, lone_birds], TYPE_SHIFT)
 
-    colony_birds_ts, lone_birds_ts = types_shift_model(*params_ts)
+    colony_birds_ts, lone_birds_ts = types_shift_model(None)
     data_for_plot.append([colony_birds_ts, lone_birds_ts])
     save_single_run(new_path, params_ts, [colony_birds_ts, lone_birds_ts], TYPE_SHIFT)
 

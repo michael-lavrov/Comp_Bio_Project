@@ -4,10 +4,10 @@
 import sys
 from utils.DataSaver import mk_dir_for_heatmap, save_single_run, save_heatmap_data, mk_dir_for_stoch_avg, \
     mk_heatmap_header, data_extractor
-from discrete_model.StochasticModel1 import stochastic_at_death_factor_model
-from discrete_model.StochasticModel2 import stochastic_at_pandemic_rate_model
-from discrete_model.StochasticModel3 import stochastic_at_both_model
-from utils.PiHawkPlotter import Plotter
+from discrete_model.stochastic_model1 import stochastic_at_death_factor_model
+from discrete_model.stochastic_model2 import stochastic_at_pandemic_rate_model
+from discrete_model.stochastic_model3 import stochastic_at_both_model
+from utils.Plotter import Plotter
 import numpy as np
 # Parameters order: pandemic_rate, selection_coefficient, c_death_factor, l_death_factor, number_of_generations,
 # growth_rate, initial_num_of_birds, carrying_capacity

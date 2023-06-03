@@ -1,7 +1,7 @@
-from discrete_model.DetermenisticModel import logistic_growth_model
-from discrete_model.TypesShiftModel import types_shift_model
+from discrete_model.logistic_growth_model import logistic_growth_model
+from discrete_model.types_shift_model import types_shift_model
 from utils.DataSaver import *
-from utils.PiHawkPlotter import Plotter
+from utils.Plotter import Plotter
 import sys
 import numpy as np
 SF_IND = 3
@@ -28,13 +28,13 @@ def rescue_effect(dir_path):
     # Deterministic model run
     params1 = [pandemic_rate, selection_coefficient, c_death_factor, l_death_factor, num_of_generations, growth_rate,
                init_birds_num, carrying_capacity]
-    colony_birds1, lone_birds1 = logistic_growth_model(*params1)
+    colony_birds1, lone_birds1 = logistic_growth_model()
     save_single_run(new_dir_path, params1, [colony_birds1, lone_birds1], "Deterministic")
 
     # Type Shift model run
     params2 = [pandemic_rate, selection_coefficient, c_death_factor, shift_factor, l_death_factor, num_of_generations,
                growth_rate, init_birds_num, carrying_capacity]
-    colony_birds2, lone_birds2 = types_shift_model(*params2)
+    colony_birds2, lone_birds2 = types_shift_model(None)
     save_single_run(new_dir_path, params2, [colony_birds2, lone_birds2], "TypeShift")
 
     # Making subplots
@@ -65,21 +65,21 @@ def extinction_dynamics(dir_path):
     # First scenario - extinction
     params1 = [pandemic_rate, selection_coefficient1, c_death_factor, l_death_factor1, num_of_generations, growth_rate,
                init_birds_num, carrying_capacity]
-    colony_birds1, lone_birds1 = logistic_growth_model(*params1)
+    colony_birds1, lone_birds1 = logistic_growth_model()
     data_for_plots.append([colony_birds1, lone_birds1])
     save_single_run(new_dir_path, params1, [colony_birds1, lone_birds1], "Deterministic")
 
     # Second scenario - Lone birds survive, lone death factor is lower
     params2 = [pandemic_rate, selection_coefficient1, c_death_factor, l_death_factor2, num_of_generations, growth_rate,
                init_birds_num, carrying_capacity]
-    colony_birds2, lone_birds2 = logistic_growth_model(*params2)
+    colony_birds2, lone_birds2 = logistic_growth_model()
     data_for_plots.append([colony_birds2, lone_birds2])
     save_single_run(new_dir_path, params2, [colony_birds2, lone_birds2], "Deterministic")
 
     # Third scenario - Lone birds survive, selection coefficient is lower
     params3 = [pandemic_rate, selection_coefficient2, c_death_factor, l_death_factor1, num_of_generations, growth_rate,
                init_birds_num, carrying_capacity]
-    colony_birds3, lone_birds3 = logistic_growth_model(*params3)
+    colony_birds3, lone_birds3 = logistic_growth_model()
     data_for_plots.append([colony_birds3, lone_birds3])
     save_single_run(new_dir_path, params3, [colony_birds3, lone_birds3], "Deterministic")
 
@@ -107,7 +107,7 @@ def lethality_comparison(dir_path):
     # Scenario 1: Ex
     params1 = [pandemic_rate, selection_coefficient, death_factors[0], death_factors[0], num_of_generations, growth_rate,
                init_birds_num, carrying_capacity]
-    colony_birds1, lone_birds1 = logistic_growth_model(*params1)
+    colony_birds1, lone_birds1 = logistic_growth_model()
     data_for_plots.append([colony_birds1, lone_birds1])
 
 
@@ -134,28 +134,28 @@ def type_shift_comparison(dir_path):
     # Scenario 1: Shift factor is too small, brings to extinction.
     params1 = [pandemic_rate, selection_coefficient, c_death_factor, shift_factor1, l_death_factor, num_of_generations,
                growth_rate, init_birds_num, carrying_capacity]
-    colony_birds1, lone_birds1 = types_shift_model(*params1)
+    colony_birds1, lone_birds1 = types_shift_model(None)
     data_for_plots.append([colony_birds1, lone_birds1])
     save_single_run(new_dir_path, params1, [colony_birds1, lone_birds1], "TypeShift")
 
     # Scenario 2: Optimal shift factor
     params2 = [pandemic_rate, selection_coefficient, c_death_factor, shift_factor2, l_death_factor, num_of_generations,
                growth_rate, init_birds_num, carrying_capacity]
-    colony_birds2, lone_birds2 = types_shift_model(*params2)
+    colony_birds2, lone_birds2 = types_shift_model(None)
     data_for_plots.append([colony_birds2, lone_birds2])
     save_single_run(new_dir_path, params2, [colony_birds2, lone_birds2], "TypeShift")
 
     # Scenario 3: Sub-optimal shift factor
     params3 = [pandemic_rate, selection_coefficient, c_death_factor, shift_factor3, l_death_factor, num_of_generations,
                growth_rate, init_birds_num, carrying_capacity]
-    colony_birds3, lone_birds3 = types_shift_model(*params3)
+    colony_birds3, lone_birds3 = types_shift_model(None)
     data_for_plots.append([colony_birds3, lone_birds3])
     save_single_run(new_dir_path, params3, [colony_birds3, lone_birds3], "TypeShift")
 
     # Scenario 4: Shift factor permits the birds to barely survive
     params4 = [pandemic_rate, selection_coefficient, c_death_factor, shift_factor4, l_death_factor, num_of_generations,
                growth_rate, init_birds_num, carrying_capacity]
-    colony_birds4, lone_birds4 = types_shift_model(*params4)
+    colony_birds4, lone_birds4 = types_shift_model(None)
     data_for_plots.append([colony_birds4, lone_birds4])
     save_single_run(new_dir_path, params4, [colony_birds4, lone_birds4], "TypeShift")
 
@@ -189,7 +189,7 @@ def shift_factor_range_comparison(dir_path):
     for shift_factor in shift_factors:
 
         params[SF_IND] = shift_factor
-        colony_birds, lone_birds = types_shift_model(*params)
+        colony_birds, lone_birds = types_shift_model(None)
         save_single_run(new_dir_path, params, [colony_birds, lone_birds], "TypeShift")
         avg_bird_numbers.append(np.average(colony_birds[900:] + lone_birds[900:]))
 
