@@ -3,7 +3,8 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 
-
+NUM_PARAMETERS_REG = 8
+NUM_PARAMETERS_TYPE_SHIFT = 9
 def mk_dir_for_stoch_avg(dir_path, params, model_name):
     now = datetime.now()
     date_time = now.strftime("%Y-%m-%d_%H-%M-%S-%f")
@@ -72,9 +73,14 @@ def save_single_run(dir_path, parameters, birds_populations, model_type=None):
     new_dir = os.path.join(dir_path, f'{model_type}_run_{date_time}')
     os.makedirs(new_dir, exist_ok=True)
 
-    pandemic_rate, selection_coefficient, c_death_factor, l_death_factor, number_of_generations = \
-        parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]
-    growth_rate, initial_num_of_birds, carrying_capacity = parameters[5], parameters[6], parameters[7]
+    if len(parameters) == NUM_PARAMETERS_REG:
+        pandemic_rate, selection_coefficient, c_death_factor, l_death_factor, number_of_generations = \
+            parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]
+        growth_rate, initial_num_of_birds, carrying_capacity = parameters[5], parameters[6], parameters[7]
+    else:
+        pandemic_rate, selection_coefficient, c_death_factor, shift_factor, l_death_factor, number_of_generations = \
+            parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5]
+        growth_rate, initial_num_of_birds, carrying_capacity = parameters[6], parameters[7], parameters[8]
 
     header_file_path = os.path.join(new_dir, f'{model_type}_run_{date_time}.txt')
     with open(header_file_path, 'w') as file:
@@ -84,6 +90,8 @@ def save_single_run(dir_path, parameters, birds_populations, model_type=None):
         file.write(f"The changing parameters are:\nPandemic rate: {pandemic_rate}\n"
                    f"\nSelection coefficient: {selection_coefficient}\nColony birds death factor:{c_death_factor}\n"
                    f"Lone birds death factor: {l_death_factor}\n\n")
+        if (len(parameters) != NUM_PARAMETERS_REG):
+            file.write(f"The shift factor is: {shift_factor}\n\n")
 
         file.write("Total population, Colony birds population, Lone birds population, Colony birds fraction")
 

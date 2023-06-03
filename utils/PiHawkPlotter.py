@@ -58,7 +58,7 @@ class Plotter:
         """
         font = "Calibri"
         font_size = 20
-        fig = make_subplots(rows=num_rows, cols=num_cols, shared_xaxes=False, x_title=None,
+        fig = make_subplots(rows=num_rows, cols=num_cols, shared_xaxes=False, x_title="Generations",
                             y_title=None, subplot_titles=subplot_titles)
         fig.update_annotations(font=dict(family=font, size=font_size))
         color1, color2 = "red", "blue"
@@ -79,12 +79,12 @@ class Plotter:
                     fig.add_trace(go.Scatter(x=generations, y=lone_birds, marker=dict(color=color2),
                                              showlegend=False), row=i + 1, col=j + 1)
         fig.update_layout(font=dict(family=font, size=font_size-2))
-        fig['layout']['xaxis']['title'] = "Generations"
+        # fig['layout']['xaxis']['title'] = "Generations"
         fig['layout']['yaxis']['title'] = "Birds number"
-        fig['layout']['xaxis2']['title'] = "Generations"
+        # fig['layout']['xaxis2']['title'] = "Generations"
         fig['layout']['yaxis2']['title'] = "Birds number"
-        fig['layout']['xaxis3']['title'] = "Generations"
-        fig['layout']['yaxis3']['title'] = "Birds number"
+        # fig['layout']['xaxis3']['title'] = "Generations"
+        # fig['layout']['yaxis3']['title'] = "Birds number"
         fig.show()
 
     @staticmethod

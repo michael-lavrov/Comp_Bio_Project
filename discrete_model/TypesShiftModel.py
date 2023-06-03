@@ -33,9 +33,12 @@ def types_shift_model(pandemic_rate, selection_coeff, c_pandemic_death_factor, s
         # strategy_change_rate = np.random.normal(strategy_change_rate, 0.01)
         colony_to_lone = colony_birds[i] * shift_factor
         lone_to_colony = lone_birds[i] * shift_factor
-
-        colony_birds[i] = colony_birds[i] - colony_to_lone + lone_to_colony
-        lone_birds[i] = lone_birds[i] - lone_to_colony + colony_to_lone
+        if colony_to_lone >= 1:
+            lone_birds[i] += colony_to_lone
+            colony_birds[i] -= colony_to_lone
+        if lone_to_colony >= 1:
+            colony_birds[i] += lone_to_colony
+            lone_birds[i] -= lone_to_colony
 
     return colony_birds, lone_birds
 

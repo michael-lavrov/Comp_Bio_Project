@@ -5,7 +5,7 @@ from scipy.stats import truncnorm
 INITIAL_NUM_OF_BIRDS = 3000
 CARRYING_CAPACITY = 10000
 UPPER_BOUND = 0.1
-STD = 0.1
+STD = 0.2
 
 
 def stochastic_at_both_model(pandemic_rate, selection_coeff, c_pandemic_death_factor, l_pandemic_death_factor=0,

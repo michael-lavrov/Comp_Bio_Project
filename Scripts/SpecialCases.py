@@ -16,7 +16,7 @@ def rescue_effect(dir_path):
     pandemic_rate = 0.1
     selection_coefficient = 0.1
     c_death_factor = 0.8
-    shift_factor = 0.01
+    shift_factor = 0.002
     l_death_factor = 0.48
     num_of_generations = 1000
     growth_rate = 0.1
@@ -198,9 +198,9 @@ def shift_factor_range_comparison(dir_path):
 
 def main():
     path = sys.argv[1]
-    # rescue_effect(path)
+    rescue_effect(path)
     # type_shift_comparison(path)
-    shift_factor_range_comparison(path)
+    # shift_factor_range_comparison(path)
 
 
 if __name__ == "__main__":
