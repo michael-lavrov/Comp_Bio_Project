@@ -9,6 +9,7 @@ class Model(Enum):
     STOCHASTIC3 = 3
     TYPE_SHIFT = 4
 
+
 class ParamName(Enum):
     PANDEMIC_RATE = 0
     C_DEATH_FACTOR = 1
