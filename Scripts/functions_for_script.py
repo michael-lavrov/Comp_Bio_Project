@@ -1,47 +1,38 @@
 import numpy as np
-from utils.Auxiliary import Params, ParamName, PARAM_NAMES
+from utils.Auxiliary import Params, ParamName, PARAM_NAMES, BirdsPopulations, MODEL_NAMES, Model
 from discrete_model.logistic_growth_model import logistic_growth_model
-from typing import Tuple, Callable
+from typing import Tuple, Callable, List
 from utils.Plotter import Plotter
 from utils.DataSaver import mk_dir_for_heatmap, save_heatmap_data, save_single_run, mk_dir_for_stoch_avg,\
     mk_heatmap_header
 FRAC_OF_COLONY_BIRDS_TITLE = "Fraction of colony birds"
+FRAC_OF_COLONY_WINS = "Fraction of colony birds wins"
 FRAC_OF_LONE_BIRDS_TITLE = "Fraction of lone birds"
 FRAC_OF_CO_EX_TITLE = "Fraction of coexistence"
 COLONY_WINS, LONE_WINS, COEXISTENCE = "Colony wins", "Lone wins", "Coexistence"
+DETER_MODEL = "deterministic_model"
 MIN_FRAC_FOR_WIN = 0.95
 
 
-def run_three_scenarios(dir_path: str, first_scenario_params: Params, second_scenario_params: Params,
-                        third_scenario_params: Params, pandemic_function: Callable,
-                        subplot_titles: Tuple[str, str, str]) -> None:
+def run_several_scenarios(dir_path: str, pandemic_function: Callable, subplot_titles: Tuple,
+                          params_arr: List[Params], model_name: str) -> None:
     """
-    A function that runs three different scenarios of a given model. The parameters for the three scenarios
-    are passed to the function as arguments separately. The changing variable is determined by the arguments.
-    Plots the three scenarios in one image.
-    :param dir_path: Path for directory in which to save the data.
-    :param first_scenario_params:
-    :param second_scenario_params:
-    :param third_scenario_params:
-    :param pandemic_function: The function that determines the model's behavior during pandemic.
-    :param subplot_titles: Titles for the plot subplots.
+    A function that runs a given model in several scenarios, then plots them as subplots.
+    :param dir_path: The directory in which to save the data.
+    :param pandemic_function: The model pandemic function.
+    :param subplot_titles: Titles of the scenarios.
+    :param params_arr: An array containing the parameters for the scenarios.
+    :param model_name: The name of the model.
     :return: None
     """
     data_for_plot = []
-    # Colony birds winning scenario:
-    colony_birds_1, lone_birds_1 = logistic_growth_model(first_scenario_params, pandemic_function)
-    # save_single_run(dir_path, c_win_params, [colony_birds_1, lone_birds_1], DETER_MODEL)
-    data_for_plot.append(([colony_birds_1, lone_birds_1]))
-    # Lone birds winning scenario
-    colony_birds_2, lone_birds_2 = logistic_growth_model(second_scenario_params, pandemic_function)
-    # save_single_run(dir_path, l_win_params, [colony_birds_2, lone_birds_2], DETER_MODEL)
-    data_for_plot.append(([colony_birds_2, lone_birds_2]))
-    # Coexistence scenario
-    colony_birds_3, lone_birds_3 = logistic_growth_model(third_scenario_params, pandemic_function)
-    # save_single_run(dir_path, co_ex_params, [colony_birds_3, lone_birds_3], DETER_MODEL)
-    data_for_plot.append(([colony_birds_3, lone_birds_3]))
 
-    Plotter.plot_scatter_subplots(3, 1, data_for_plot, subplot_titles)
+    for params in params_arr:
+        colony_birds, lone_birds = logistic_growth_model(params, pandemic_function)
+        save_single_run(dir_path, params, BirdsPopulations(colony_birds, lone_birds), model_name)
+        data_for_plot.append([colony_birds, lone_birds])
+
+    Plotter.plot_scatter_subplots(len(params_arr), 1, data_for_plot, subplot_titles)
 
 
 def run_heatmap_pr_df(dir_path: str, pandemic_rates: np.ndarray, death_factors: np.ndarray, params: Params,
@@ -152,16 +143,21 @@ def run_stoch_heatmaps_pr_df(num_of_runs: int, pandemic_func: Callable, model_na
     # save_heatmap_data(new_path, death_factors, pandemic_rates, colony_win_mat, LONE_WINS)
     # save_heatmap_data(new_path, death_factors, pandemic_rates, colony_win_mat, COEXISTENCE)
 
-# def run_stoch_single_heatmap(num_of_runs, pandemic_function, model_name, pandemic_rates, death_factors, params, dir_path):
-#     new_path = mk_dir_for_heatmap(dir_path, model_name)
-#
-#     colony_win_mat = np.empty(shape=(pandemic_rates.size, death_factors.size))
-#     for i, rate in enumerate(pandemic_rates):
-#         for j, factor in enumerate(death_factors):
-#             params = [rate, SELECTION_COEFFICIENT, factor, LONE_DEATH_FACTOR, NUM_OF_GENERATIONS, GROWTH_RATE,
-#                       INITIAL_NUM_OF_BIRDS, CARRYING_CAPACITY]
-#             colony_win_frac, lone_win_frac, coexist_frac = \
-#                 run_stochastic_model_average(num_of_runs, pandemic_function, model_name, params, new_path)
-#             colony_win_mat[i][j] = colony_win_frac
-#     Plotter.plot_heatmap(colony_win_mat, death_factors, pandemic_rates, xaxis_title="Death factor",
-#                          yaxis_title="Pandemic rate", legend_title="Fraction of colony birds wins")
+
+def run_stoch_single_heatmap(num_of_runs, pandemic_function, model_name, pandemic_rates, death_factors, params, dir_path):
+    new_path = mk_dir_for_heatmap(dir_path, model_name)
+
+    colony_win_mat = np.empty(shape=(pandemic_rates.size, death_factors.size))
+    for i, rate in enumerate(pandemic_rates):
+        for j, factor in enumerate(death_factors):
+            params.pandemic_rate = rate
+            params.c_death_factor = factor
+            colony_win_frac, lone_win_frac, coexist_frac = \
+                run_stochastic_model_average(num_of_runs, pandemic_function, model_name, params, new_path)
+            colony_win_mat[i][j] = colony_win_frac
+    Plotter.plot_heatmap(colony_win_mat, death_factors, pandemic_rates,
+                         xaxis_title=PARAM_NAMES[ParamName.C_DEATH_FACTOR],
+                         yaxis_title=PARAM_NAMES[ParamName.PANDEMIC_RATE],
+                         legend_title=FRAC_OF_COLONY_WINS)
+
+

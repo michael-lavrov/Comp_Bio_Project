@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 DEFAULT_FONT = 'Calibri'
-DEFAULT_FONT_SIZE = 18
+DEFAULT_FONT_SIZE = 28
 STYLE_CONFIG = {'family': DEFAULT_FONT, 'size': DEFAULT_FONT_SIZE}
 
 
@@ -57,7 +57,7 @@ class Plotter:
         data: [ [colony_birds, lone_birds], [colony_birds, lone_birds],  ... ]
         """
         font = "Calibri"
-        font_size = 20
+        font_size = 28
         fig = make_subplots(rows=num_rows, cols=num_cols, shared_xaxes=False, x_title="Generations",
                             y_title=None, subplot_titles=subplot_titles)
         fig.update_annotations(font=dict(family=font, size=font_size))

@@ -1,17 +1,15 @@
-# This script was written by Michael Lavrov (lavrov14798) in April 2023 as a part of Computational Biology
+# This script was written by Michael Lavrov (lavrov14798) in June 2023 as a part of Computational Biology
 # Project for undergraduates. The project is done under the supervision of Dr. Oren Kolodny.
 # This script consists of functions which ran population dynamics for the Stochastic models.
 import sys
 from discrete_model.logistic_growth_model import logistic_growth_model
-from discrete_model.pandemic_functions import stochastic_at_pandemic_rate_pandemic_function
-from functions_for_script import run_three_scenarios, run_stoch_heatmaps_pr_df
+from discrete_model.pandemic_functions import stochastic_at_pandemic_rate_pandemic_function, stochastic_at_both_pandemic_function
+from functions_for_script import run_several_scenarios, run_stoch_heatmaps_pr_df, run_stoch_single_heatmap
 from utils.DataSaver import mk_dir_for_heatmap, save_single_run, save_heatmap_data, mk_dir_for_stoch_avg, \
     mk_heatmap_header, data_extractor
 from utils.Auxiliary import Params, PARAM_NAMES, ParamName
 from utils.Plotter import Plotter
 import numpy as np
-# Parameters order: pandemic_rate, selection_coefficient, c_death_factor, l_death_factor, number_of_generations,
-# growth_rate, initial_num_of_birds, carrying_capacity
 MIN_FRAC_FOR_WIN = 0.95
 NUM_OF_RUNS = 100
 # Values of unchanging parameters
@@ -45,8 +43,8 @@ def pandemic_rates_comparison_script_stoch_model(dir_path):
     subplot_titles = (f'{PARAM_NAMES[ParamName.C_DEATH_FACTOR]}: {c_win_params.c_death_factor}',
                       f'{PARAM_NAMES[ParamName.C_DEATH_FACTOR]}: {l_win_params.c_death_factor}',
                       f'{PARAM_NAMES[ParamName.C_DEATH_FACTOR]}: {co_ex_params.c_death_factor}')
-    run_three_scenarios(dir_path, c_win_params, l_win_params, co_ex_params,
-                        stochastic_at_pandemic_rate_pandemic_function, subplot_titles)
+    run_several_scenarios(dir_path, stochastic_at_pandemic_rate_pandemic_function, subplot_titles,
+                          [c_win_params, l_win_params, co_ex_params], "stochastic1")
 
 
 def fraction_heatmaps_script(dir_path):
@@ -60,20 +58,26 @@ def fraction_heatmaps_script(dir_path):
                              params=params, dir_path=dir_path)
 
 
-def run_example_bird_population(dir_path, model, model_name):
+def run_example_bird_population(dir_path, pandemic_function, model_name):
 
-    params = [RATE1, 0.05, 0.5, 0, NUM_OF_GENERATIONS, GROWTH_RATE, INITIAL_NUM_OF_BIRDS, CARRYING_CAPACITY]
-    colony_birds, lone_birds = model(*params)
+    params = Params(pandemic_rate=RATE1, selection_coefficient=0.05, c_death_factor=0.5, l_death_factor=0,
+                    num_of_generations=NUM_OF_GENERATIONS, growth_rate=GROWTH_RATE, init_birds_num=INITIAL_NUM_OF_BIRDS,
+                    carrying_capacity=CARRYING_CAPACITY)
+    colony_birds, lone_birds = logistic_growth_model(params, pandemic_function)
     fig = Plotter.plot_birds_numbers_scatter_plot(colony_birds, lone_birds, model_name)
     fig.show()
 
 
 def main():
 
-    # pandemic_rates = np.linspace(0, 1, 11)
-    # death_factors = np.linspace(0, 1, 31)
+    pandemic_rates = np.linspace(0, 1, 11)
+    death_factors = np.linspace(0, 1, 11)
     path = sys.argv[1]
-    fraction_heatmaps_script(path)
+    # run_example_bird_population(path, stochastic_at_both_pandemic_function, "")
+    params = Params(pandemic_rate=0, c_death_factor=0, l_death_factor=0, num_of_generations=1000, growth_rate=1.5,
+                    init_birds_num=3000, carrying_capacity=10000, selection_coefficient=0.05)
+    run_stoch_single_heatmap(10, stochastic_at_both_pandemic_function, "Stochastic3", pandemic_rates, death_factors,
+                             params, path)
 
 
 if __name__ == "__main__":

@@ -1,10 +1,10 @@
-# This script was written by Michael Lavrov (lavrov14798) in March-April 2023 as a part of Computational Biology
+# This script was written by Michael Lavrov (lavrov14798) in June 2023 as a part of Computational Biology
 # Project for undergraduates. The project is done under the supervision of Dr. Oren Kolodny.
 # This script consists of two functions which ran population dynamics for the "Deterministic Model".
 from utils.DataSaver import mk_dir_for_heatmap, save_single_run, save_heatmap_data, mk_heatmap_header
 from discrete_model.logistic_growth_model import logistic_growth_model
 from discrete_model.pandemic_functions import deterministic_pandemic_function
-from functions_for_script import run_three_scenarios, run_heatmap_pr_df
+from functions_for_script import run_several_scenarios, run_heatmap_pr_df
 from utils.Plotter import Plotter
 from utils.Auxiliary import Params, Model, MODEL_NAMES, ParamName, PARAM_NAMES
 from typing import Tuple, Callable
@@ -27,23 +27,23 @@ COLONY_BIRDS_STR = "Colony birds"
 
 def death_factors_comparison_script(dir_path):
 
-    c_win_params = Params(pandemic_rate=DEFAULT_PANDEMIC_RATE, selection_coefficient=DEFAULT_SELECTION_COEFFICIENT,
-                          c_death_factor=FACTOR1, l_death_factor=DEFAULT_L_DEATH_FACTOR,
+    c_win_params = Params(pandemic_rate=0.05, selection_coefficient=DEFAULT_SELECTION_COEFFICIENT,
+                          c_death_factor=0.5, l_death_factor=DEFAULT_L_DEATH_FACTOR,
                           num_of_generations=NUM_OF_GENERATIONS, growth_rate=GROWTH_RATE,
                           init_birds_num=INITIAL_NUM_OF_BIRDS, carrying_capacity=CARRYING_CAPACITY)
-    l_win_params = Params(pandemic_rate=DEFAULT_PANDEMIC_RATE, selection_coefficient=DEFAULT_SELECTION_COEFFICIENT,
-                          c_death_factor=FACTOR2, l_death_factor=DEFAULT_L_DEATH_FACTOR,
+    l_win_params = Params(pandemic_rate=0.1, selection_coefficient=DEFAULT_SELECTION_COEFFICIENT,
+                          c_death_factor=0.5, l_death_factor=DEFAULT_L_DEATH_FACTOR,
                           num_of_generations=NUM_OF_GENERATIONS, growth_rate=GROWTH_RATE,
                           init_birds_num=INITIAL_NUM_OF_BIRDS, carrying_capacity=CARRYING_CAPACITY)
-    co_ex_params = Params(pandemic_rate=DEFAULT_PANDEMIC_RATE, selection_coefficient=DEFAULT_SELECTION_COEFFICIENT,
-                          c_death_factor=FACTOR3, l_death_factor=DEFAULT_L_DEATH_FACTOR,
-                          num_of_generations=NUM_OF_GENERATIONS, growth_rate=GROWTH_RATE,
-                          init_birds_num=INITIAL_NUM_OF_BIRDS, carrying_capacity=CARRYING_CAPACITY)
-    subplot_titles = (f'{PARAM_NAMES[ParamName.C_DEATH_FACTOR]}: {c_win_params.c_death_factor}',
-                      f'{PARAM_NAMES[ParamName.C_DEATH_FACTOR]}: {l_win_params.c_death_factor}',
-                      f'{PARAM_NAMES[ParamName.C_DEATH_FACTOR]}: {co_ex_params.c_death_factor}')
-    run_three_scenarios(dir_path, c_win_params, l_win_params, co_ex_params, deterministic_pandemic_function,
-                        subplot_titles)
+    # co_ex_params = Params(pandemic_rate=DEFAULT_PANDEMIC_RATE, selection_coefficient=DEFAULT_SELECTION_COEFFICIENT,
+    #                       c_death_factor=FACTOR3, l_death_factor=DEFAULT_L_DEATH_FACTOR,
+    #                       num_of_generations=NUM_OF_GENERATIONS, growth_rate=GROWTH_RATE,
+    #                       init_birds_num=INITIAL_NUM_OF_BIRDS, carrying_capacity=CARRYING_CAPACITY)
+    subplot_titles = (f'{PARAM_NAMES[ParamName.PANDEMIC_RATE]}: {c_win_params.c_death_factor}',
+                      f'{PARAM_NAMES[ParamName.PANDEMIC_RATE]}: {l_win_params.c_death_factor}')
+
+    run_several_scenarios(dir_path, deterministic_pandemic_function, subplot_titles, [c_win_params, l_win_params],
+                          "Deterministic")
 
 
 def run_deterministic_heatmap(dir_path):
@@ -69,7 +69,7 @@ def deterministic_single_run(dir_path):
 
 def main():
     path = sys.argv[1]  # Command line argument for the directory in which to save the data of the runs.
-    deterministic_single_run(path)
+    run_deterministic_heatmap(path)
 
 
 

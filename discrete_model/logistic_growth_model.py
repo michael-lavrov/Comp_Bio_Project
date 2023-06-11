@@ -1,5 +1,5 @@
 import numpy as np
-from utils.Auxiliary import Params
+from utils.Auxiliary import Params, BirdsPopulations
 from typing import Callable, Tuple
 
 
