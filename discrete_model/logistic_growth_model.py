@@ -39,3 +39,4 @@ def run_single_iteration(colony_birds: np.ndarray, lone_birds: np.ndarray, i: in
         lone_birds[i] = 0
     else:
         lone_birds[i] = (N_total - colony_birds[i])
+

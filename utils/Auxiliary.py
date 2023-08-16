@@ -38,6 +38,9 @@ class BirdsPopulations:
     def get_frac_of_colony_birds(self):
         return self.colony_birds / self.get_total_birds_num()
 
+    def get_num_of_generations(self):
+        return np.arange(len(self.colony_birds))
+
 @dataclass
 class Params:
     """

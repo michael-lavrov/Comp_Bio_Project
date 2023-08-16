@@ -91,6 +91,7 @@ def types_shift_model_deter_function(colony_birds: np.ndarray, lone_birds: np.nd
     :return: None
     """
     deterministic_pandemic_function(colony_birds, lone_birds, i, params)
+    # stochastic_at_pandemic_rate_pandemic_function(colony_birds, lone_birds, i, params)
 
     colony_to_lone = colony_birds[i] * params.shift_factor
     lone_to_colony = lone_birds[i] * params.shift_factor
@@ -100,3 +101,9 @@ def types_shift_model_deter_function(colony_birds: np.ndarray, lone_birds: np.nd
     if lone_to_colony >= 1:
         colony_birds[i] += lone_to_colony
         lone_birds[i] -= lone_to_colony
+
+
+# def type_shift_stoch(colony_birds: np.ndarray, lone_birds: np.ndarray, i: int, params: Params):
+
+
+

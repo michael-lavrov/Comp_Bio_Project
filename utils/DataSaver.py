@@ -81,7 +81,7 @@ def save_single_run(dir_path: str, params: Params, birds_populations: BirdsPopul
     make_header_file(new_dir_path, model_name, date_time, params)
     # Creating data file and saving data
     data_file_path = os.path.join(new_dir_path, f'{model_name}_run_data_{date_time}.csv')
-    generations = [i for i in range(1, 1001)]
+    generations = [i for i in range(1, params.num_of_generations+1)]
     columns = ["Total population", "Colony birds population", "Lone birds population", "Colony birds fraction"]
     data = np.column_stack((birds_populations.get_total_birds_num(), birds_populations.colony_birds,
                             birds_populations.lone_birds, birds_populations.get_frac_of_colony_birds()))

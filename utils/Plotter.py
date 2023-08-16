@@ -1,10 +1,13 @@
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from utils.Auxiliary import Params, BirdsPopulations
+from typing import List, Tuple
 
 DEFAULT_FONT = 'Calibri'
 DEFAULT_FONT_SIZE = 28
 STYLE_CONFIG = {'family': DEFAULT_FONT, 'size': DEFAULT_FONT_SIZE}
+GENERATIONS_STR, COLONY_BIRDS_STR, LONE_BIRDS_STR = "Generations", "Colony birds", "Lone birds"
 
 
 class Plotter:
@@ -52,39 +55,28 @@ class Plotter:
         fig.show()
 
     @staticmethod
-    def plot_scatter_subplots(num_rows, num_cols, data, subplot_titles):
+    def plot_scatter_subplots(num_rows: int, num_cols: int, data: List[BirdsPopulations], subplot_titles: Tuple):
         """
         data: [ [colony_birds, lone_birds], [colony_birds, lone_birds],  ... ]
         """
         font = "Calibri"
-        font_size = 28
-        fig = make_subplots(rows=num_rows, cols=num_cols, shared_xaxes=False, x_title="Generations",
+        font_size = 22
+        fig = make_subplots(rows=num_rows, cols=num_cols, shared_xaxes=False, x_title=GENERATIONS_STR,
                             y_title=None, subplot_titles=subplot_titles)
         fig.update_annotations(font=dict(family=font, size=font_size))
         color1, color2 = "red", "blue"
+        show_legend = True
         for i in range(num_rows):
             for j in range(num_cols):
-                colony_birds, lone_birds = data[i+j][0], data[i+j][1]
-                generations = np.arange(len(colony_birds))
-                if i == j == 0:
-                    fig.add_trace(go.Scatter(x=generations, y=colony_birds, marker=dict(color=color1),
-                                             name='Colony Birds'), row=i+1, col=j+1)
-                    fig.add_trace(go.Scatter(x=generations, y=lone_birds, marker=dict(color=color2),
-                                             name='Lone Birds'), row=i+1, col=j+1)
-                else:
-                    fig.add_trace(
-                        go.Scatter(x=generations, y=colony_birds, marker=dict(color=color1),
-                                   showlegend=False), row=i + 1, col=j + 1)
-
-                    fig.add_trace(go.Scatter(x=generations, y=lone_birds, marker=dict(color=color2),
-                                             showlegend=False), row=i + 1, col=j + 1)
+                if j != 0 or i != 0:
+                    show_legend = False
+                fig.add_trace(go.Scatter(x=data[i+j].get_num_of_generations(), y=data[i+j].colony_birds,
+                                         marker=dict(color=color1), name=COLONY_BIRDS_STR, showlegend=show_legend),
+                              row=i + 1, col=j + 1)
+                fig.add_trace(go.Scatter(x=data[i + j].get_num_of_generations(), y=data[i + j].lone_birds,
+                                         marker=dict(color=color2), name=LONE_BIRDS_STR, showlegend=show_legend),
+                              row=i + 1, col=j + 1)
         fig.update_layout(font=dict(family=font, size=font_size-2))
-        # fig['layout']['xaxis']['title'] = "Generations"
-        fig['layout']['yaxis']['title'] = "Birds number"
-        # fig['layout']['xaxis2']['title'] = "Generations"
-        fig['layout']['yaxis2']['title'] = "Birds number"
-        # fig['layout']['xaxis3']['title'] = "Generations"
-        # fig['layout']['yaxis3']['title'] = "Birds number"
         fig.show()
 
     @staticmethod
